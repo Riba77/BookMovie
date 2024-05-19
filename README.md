@@ -11,5 +11,7 @@ The main objective of this project is to provide the implementation of a backend
 
 
 
-# Compile program:
-1. Compile tests: 
+# Compile and run program:
+1. Setup main program: ```meson setup Build && cd Build```  
+   Compile main program: ```meson compile cli``` 
+2. Run program: ```Build/src/cli/cli.exe```
