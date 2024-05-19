@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Virtual enviorment
+.venv
+
+# Build directory
+builddir/
+
+# gTest
+subprojects/
