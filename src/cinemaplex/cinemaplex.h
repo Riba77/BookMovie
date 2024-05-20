@@ -5,10 +5,7 @@
 #include <map>
 #include <set>
 
-class CMovieDetails {
- public:
-  CMovieDetails(const std::string &title, const std::string &description);
-
+struct SMovieParams {
   const std::string Title;
   const std::string Description;
 };
@@ -16,11 +13,7 @@ class CMovieDetails {
 enum class SeatStatus { AVAILABLE, SOLD };
 
 // Represents a movie playing at a specific time in a theater
-class CShowTime {
- public:
-  CShowTime(const int32_t &showId, const std::string &movieId,
-            const std::string &time, const std::string &theaterId)
-      : Id(showId), MovieId(movieId), Time(time), TheaterId(theaterId) {}
+struct SShowParams {
   const int32_t Id;
   const std::string MovieId;
   const std::string Time;
@@ -29,11 +22,11 @@ class CShowTime {
 
 class CShow {
  public:
-  CShow(const CShowTime &showTime, size_t nseats);
+  CShow(const SShowParams &showTime, size_t nseats);
   std::expected<void, std::string> BuySeats(std::vector<std::string> seats);
   std::vector<std::string> AvailableSeats() const;
 
-  const CShowTime ShowTime;
+  const SShowParams ShowParams;
   const size_t nSeats;
 
  private:
@@ -42,23 +35,54 @@ class CShow {
 
 class CTheater {
  public:
-  CTheater(const std::string &id, size_t a_nseats);
+  CTheater(const std::string &id, size_t nseats);
 
-  std::expected<void, std::string> addShow(const CShowTime &showtime);
+  std::expected<void, std::string> AddShow(const SShowParams &showtime);
 
-  std::vector<int32_t> listShowTimes() const;
-
-  std::expected<CShowTime, std::string> getShowTimes(
-      const int32_t &showId) const;
-
-  std::expected<std::reference_wrapper<CShow>, std::string> getShow(
-      const int32_t &showId);
-  std::expected<std::reference_wrapper<const CShow>, std::string> getCShow(
-      const int32_t &showId) const;
+  std::expected<std::reference_wrapper<CShow>, std::string> GetShow(
+      const uint32_t showId);
+  std::expected<std::reference_wrapper<const CShow>, std::string> GetCShow(
+      const uint32_t showId) const;
 
   const std::string Id;
   const size_t nSeats = 0;
 
  private:
   std::map<int32_t, CShow> Shows;
+};
+
+class Cinemaplex {
+ public:
+  Cinemaplex(const std::string &name);
+  const std::string name = "";
+
+  std::string AddMovie(const SMovieParams &movieParams);
+  std::string CreateTheater(const std::string &showName, size_t nseats);
+
+  std::expected<int32_t, std::string> AddShow(const std::string &theaterId,
+                                              const std::string &movieId,
+                                              const std::string &time);
+  std::vector<std::string> ListMovies() const;
+  std::vector<std::string> ListTheaters(const std::string &movieId) const;
+  std::vector<int32_t> ListShows(const std::string &movieId) const;
+
+  std::expected<SMovieParams, std::string> GetMovieDetails(
+      const std::string &movieId) const;
+
+  std::expected<std::vector<std::string>, std::string> GetAvailableSeats(
+      const int32_t showId) const;
+
+  std::expected<SShowParams, std::string> GetShowParams(
+      const int32_t showId) const;
+
+  std::expected<void, std::string> BuyTickets(const int32_t showId,
+                                              std::vector<std::string> seats);
+
+ private:
+  std::map<std::string, CTheater> Theaters;
+  std::map<std::string, SMovieParams> Movies;
+  std::multimap<std::string, int32_t> Shows;
+  std::map<int32_t, SShowParams> ShowParams;
+  int32_t ShowIdCounter = 0;
+  const int32_t MaxShowId = 100;
 };
