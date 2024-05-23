@@ -9,9 +9,10 @@ The main objective of this project is to provide the implementation of a backend
 4. Install meson for building project: ```pip install meson```
 5. Install ninja for building project: ```pip install ninja```
 
-
-
 # Compile and run program:
-1. Setup main program: ```meson setup Build && cd Build```  
-   Compile main program: ```meson compile cli``` 
+1. Setup main program: ```meson setup Build```  
+   Compile main program: ```meson compile -j8 -C Build cli -v``` 
+   Compile tests: ```meson compile -j8 -C Build testprog -v``` 
 2. Run program: ```Build/src/cli/cli.exe```
+3. Run test program: ```Build/test/testprog.exe```
+

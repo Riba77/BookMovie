@@ -111,7 +111,8 @@ std::string CCinemaplex::AddMovie(const SMovieParams &movieParams) {
 std::string CCinemaplex::CreateTheater(const std::string &theaterId,
                                        size_t nseats) {
   if (Theaters.find(theaterId) != Theaters.end()) {
-    throw std::runtime_error("Theater with ID " + theaterId + " not found.");
+    throw std::runtime_error("Theater with ID " + theaterId +
+                             " already exist.");
   }
   Theaters.emplace(theaterId, CTheater(theaterId, nseats));
   return theaterId;

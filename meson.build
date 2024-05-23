@@ -9,4 +9,5 @@ add_global_arguments(
 
 subdir('src/cinemaplex')
 subdir('src/cli')
+subdir('test')
 
