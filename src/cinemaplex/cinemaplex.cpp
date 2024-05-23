@@ -94,12 +94,12 @@ CTheater::GetCShow(const uint32_t showId) const {
 }
 
 /*
- * Cinemaplex
+ * CCinemaplex
  */
 
-Cinemaplex::Cinemaplex(const std::string &name) : name(name) {}
+CCinemaplex::CCinemaplex(const std::string &name) : name(name) {}
 
-std::string Cinemaplex::AddMovie(const SMovieParams &movieParams) {
+std::string CCinemaplex::AddMovie(const SMovieParams &movieParams) {
   std::string movieId(movieParams.Title);
 
   if (Movies.find(movieId) != Movies.end()) {
@@ -108,8 +108,8 @@ std::string Cinemaplex::AddMovie(const SMovieParams &movieParams) {
   Movies.emplace(movieId, movieParams);
   return movieId;
 }
-std::string Cinemaplex::CreateTheater(const std::string &theaterId,
-                                      size_t nseats) {
+std::string CCinemaplex::CreateTheater(const std::string &theaterId,
+                                       size_t nseats) {
   if (Theaters.find(theaterId) != Theaters.end()) {
     throw std::runtime_error("Theater with ID " + theaterId + " not found.");
   }
@@ -117,9 +117,9 @@ std::string Cinemaplex::CreateTheater(const std::string &theaterId,
   return theaterId;
 }
 
-std::expected<int32_t, std::string> Cinemaplex::AddShow(
+std::expected<int32_t, std::string> CCinemaplex::AddShow(
     const std::string &theaterId, const std::string &movieId,
-    const std::string &time) {
+    const STime &time) {
   const auto theater = Theaters.find(theaterId);
   if (theater == Theaters.end()) {
     return std::unexpected("Theater with ID " + theaterId + " not found.");
@@ -142,7 +142,7 @@ std::expected<int32_t, std::string> Cinemaplex::AddShow(
       });
 }
 
-std::vector<std::string> Cinemaplex::ListMovies() const {
+std::vector<std::string> CCinemaplex::ListMovies() const {
   std::vector<std::string> movieIds;
   for (auto const &[mid, _] : Movies) {
     movieIds.push_back(mid);
@@ -150,8 +150,7 @@ std::vector<std::string> Cinemaplex::ListMovies() const {
   return movieIds;
 }
 
-std::vector<std::string> Cinemaplex::ListTheaters(
-    const std::string &movie) const {
+std::vector<std::string> CCinemaplex::ListTheaters() const {
   std::vector<std::string> theaterIds;
   for (auto const &[tid, _] : Theaters) {
     theaterIds.push_back(tid);
@@ -159,7 +158,7 @@ std::vector<std::string> Cinemaplex::ListTheaters(
   return theaterIds;
 }
 
-std::vector<int32_t> Cinemaplex::ListShows(const std::string &movieId) const {
+std::vector<int32_t> CCinemaplex::ListShows(const std::string &movieId) const {
   std::vector<int32_t> showIds;
   for (auto const &[mid, sid] : Shows) {
     if (mid == movieId) {
@@ -169,7 +168,7 @@ std::vector<int32_t> Cinemaplex::ListShows(const std::string &movieId) const {
   return showIds;
 }
 
-std::expected<SMovieParams, std::string> Cinemaplex::GetMovieDetails(
+std::expected<SMovieParams, std::string> CCinemaplex::GetMovieDetails(
     const std::string &movieId) const {
   if (Movies.find(movieId) == Movies.end()) {
     return std::unexpected("Movie does not exist");
@@ -178,7 +177,7 @@ std::expected<SMovieParams, std::string> Cinemaplex::GetMovieDetails(
 }
 
 std::expected<std::vector<std::string>, std::string>
-Cinemaplex::GetAvailableSeats(const int32_t showId) const {
+CCinemaplex::GetAvailableSeats(const int32_t showId) const {
   const auto show = ShowParams.find(showId);
   if (show == ShowParams.end()) {
     return std::unexpected("Show with ID " + std::to_string(showId) +
@@ -194,7 +193,7 @@ Cinemaplex::GetAvailableSeats(const int32_t showId) const {
       [](const CShow &show) { return show.AvailableSeats(); });
 }
 
-std::expected<SShowParams, std::string> Cinemaplex::GetShowParams(
+std::expected<SShowParams, std::string> CCinemaplex::GetShowParams(
     const int32_t showId) const {
   const auto show = ShowParams.find(showId);
   if (show == ShowParams.end()) {
@@ -204,7 +203,7 @@ std::expected<SShowParams, std::string> Cinemaplex::GetShowParams(
   return std::expected<SShowParams, std::string>(show->second);
 }
 
-std::expected<void, std::string> Cinemaplex::BuyTickets(
+std::expected<void, std::string> CCinemaplex::BuyTickets(
     const int32_t showId, std::vector<std::string> seats) {
   const auto show = ShowParams.find(showId);
   if (show == ShowParams.end()) {

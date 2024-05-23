@@ -5,6 +5,11 @@
 #include <map>
 #include <set>
 
+struct STime {
+  uint32_t Hour;
+  uint32_t Minute;
+};
+
 struct SMovieParams {
   const std::string Title;
   const std::string Description;
@@ -16,13 +21,13 @@ enum class SeatStatus { AVAILABLE, SOLD };
 struct SShowParams {
   const int32_t Id;
   const std::string MovieId;
-  const std::string Time;
+  const STime Time;
   const std::string TheaterId;
 };
 
 class CShow {
  public:
-  CShow(const SShowParams &showTime, size_t nseats);
+  CShow(const SShowParams &showParams, size_t nseats);
   std::expected<void, std::string> BuySeats(std::vector<std::string> seats);
   std::vector<std::string> AvailableSeats() const;
 
@@ -37,7 +42,7 @@ class CTheater {
  public:
   CTheater(const std::string &id, size_t nseats);
 
-  std::expected<void, std::string> AddShow(const SShowParams &showtime);
+  std::expected<void, std::string> AddShow(const SShowParams &showParams);
 
   std::expected<std::reference_wrapper<CShow>, std::string> GetShow(
       const uint32_t showId);
@@ -51,9 +56,9 @@ class CTheater {
   std::map<int32_t, CShow> Shows;
 };
 
-class Cinemaplex {
+class CCinemaplex {
  public:
-  Cinemaplex(const std::string &name);
+  CCinemaplex(const std::string &name);
   const std::string name = "";
 
   std::string AddMovie(const SMovieParams &movieParams);
@@ -61,9 +66,9 @@ class Cinemaplex {
 
   std::expected<int32_t, std::string> AddShow(const std::string &theaterId,
                                               const std::string &movieId,
-                                              const std::string &time);
+                                              const STime &time);
   std::vector<std::string> ListMovies() const;
-  std::vector<std::string> ListTheaters(const std::string &movieId) const;
+  std::vector<std::string> ListTheaters() const;
   std::vector<int32_t> ListShows(const std::string &movieId) const;
 
   std::expected<SMovieParams, std::string> GetMovieDetails(
