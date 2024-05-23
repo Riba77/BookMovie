@@ -4,6 +4,7 @@
 #include <expected>
 #include <map>
 #include <set>
+#include <mutex>
 
 struct STime {
   uint32_t Hour;
@@ -90,4 +91,5 @@ class CCinemaplex {
   std::map<int32_t, SShowParams> ShowParams;
   int32_t ShowIdCounter = 0;
   const int32_t MaxShowId = 100;
+  std::mutex Mutex;  // Mutex to protect access to
 };

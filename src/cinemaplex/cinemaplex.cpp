@@ -25,7 +25,7 @@ CShow::CShow(const SShowParams &showParams, size_t nseats)
 std::expected<void, std::string> CShow::BuySeats(
     std::vector<std::string> seats) {
   // check all seats are available
-  std::set<std::string> UniqueSeats;
+  std::set<std::string> uniqueSeats;
   for (const auto &seat : seats) {
     if (this->Seats.find(seat) == this->Seats.end()) {
       return std::unexpected("Seat " + seat + " does not exist");
@@ -33,10 +33,10 @@ std::expected<void, std::string> CShow::BuySeats(
     if (this->Seats[seat] == SeatStatus::SOLD) {
       return std::unexpected("Seat " + seat + " is already sold");
     }
-    if (UniqueSeats.find(seat) != UniqueSeats.end()) {
+    if (uniqueSeats.find(seat) != uniqueSeats.end()) {
       return std::unexpected("Seat " + seat + " is duplicated");
     }
-    UniqueSeats.insert(seat);
+    uniqueSeats.insert(seat);
   }
   // make dedicated seats marked as sold
   for (auto &seat : seats) {
@@ -206,6 +206,7 @@ std::expected<SShowParams, std::string> CCinemaplex::GetShowParams(
 
 std::expected<void, std::string> CCinemaplex::BuyTickets(
     const int32_t showId, std::vector<std::string> seats) {
+  std::lock_guard<std::mutex> lock(Mutex);  // Lock the mutex
   const auto show = ShowParams.find(showId);
   if (show == ShowParams.end()) {
     return std::unexpected("Show with ID " + std::to_string(showId) +

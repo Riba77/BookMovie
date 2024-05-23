@@ -1,6 +1,8 @@
 #include "cinemaplex.h"
 #include <gtest/gtest.h>
 
+// Not all tests added.
+
 TEST(CCinemaplexTest, CreateTheater_Success) {
   CCinemaplex cineplex("Cinemaplex company");
   std::string theaterId = "Theater1";
