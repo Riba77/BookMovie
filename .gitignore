@@ -38,4 +38,5 @@
 Build/
 
 # gTest
-subprojects/
+subprojects/packagecache/
+subprojects/googletest-1.14.0/
